@@ -9,6 +9,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_riverpod: ^2.6.1
+  firebase_core: ^4.0.0
+  firebase_storage: ^13.0.0
+  cloud_firestore: ^6.0.0
+  file_picker: ^10.3.2
+  open_filex: ^4.7.0
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
