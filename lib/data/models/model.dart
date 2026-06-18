@@ -3,32 +3,22 @@ class FileModel {
   final String fileName;
   final String fileUrl;
   final String fileType;
-  final DateTime uploadedAt;
 
   FileModel({
     required this.id,
     required this.fileName,
     required this.fileUrl,
     required this.fileType,
-    required this.uploadedAt,
   });
 
-  factory FileModel.fromMap(String id, Map<String, dynamic> map) {
+  factory FileModel.fromJson(
+    Map<String, dynamic> json,
+  ) {
     return FileModel(
-      id: id,
-      fileName: map['fileName'] ?? '',
-      fileUrl: map['fileUrl'] ?? '',
-      fileType: map['fileType'] ?? '',
-      uploadedAt: DateTime.parse(map['uploadedAt']),
+      id: json['id'],
+      fileName: json['file_name'],
+      fileUrl: json['file_url'],
+      fileType: json['file_type'],
     );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'fileName': fileName,
-      'fileUrl': fileUrl,
-      'fileType': fileType,
-      'uploadedAt': uploadedAt.toIso8601String(),
-    };
   }
 }
