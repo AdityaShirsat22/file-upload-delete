@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uploadfile/data/models/model.dart';
+import 'package:uploadfile/data/repo/download_service.dart';
 import 'package:uploadfile/data/repo/file_repo.dart';
 import 'package:uploadfile/providers/providers.dart';
 
@@ -31,4 +32,13 @@ class FileViewModel extends AsyncNotifier<void> {
       ref.invalidate(filesProvider);
     });
   }
+
+  Future<String> downloadFile(
+  FileModel file,
+) async {
+  return await DownloadService.downloadFile(
+    url: file.fileUrl,
+    fileName: file.fileName,
+  );
+}
 }

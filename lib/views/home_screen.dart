@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:open_filex/open_filex.dart';
 
 import '../data/models/model.dart';
 import '../providers/providers.dart';
@@ -145,39 +146,75 @@ class HomeScreen extends ConsumerWidget {
               ),
             ),
 
-            IconButton(
-              icon: const Icon(Icons.delete_outline, color: Colors.red),
-              onPressed: () async {
-                final confirm = await showDialog<bool>(
-                  context: context,
-                  builder: (_) {
-                    return AlertDialog(
-                      title: const Text("Delete File"),
-                      content: const Text(
-                        "Are you sure you want to delete this file?",
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context, false);
-                          },
-                          child: const Text("Cancel"),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context, true);
-                          },
-                          child: const Text("Delete"),
-                        ),
-                      ],
-                    );
-                  },
-                );
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.download, color: Colors.blue),
+                  onPressed: () async {
+                    try {
+                      final path = await ref
+                          .read(fileViewModelProvider.notifier)
+                          .downloadFile(file);
 
-                if (confirm == true) {
-                  await ref.read(fileViewModelProvider.notifier).delete(file);
-                }
-              },
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text("Download Complete"),
+                            action: SnackBarAction(
+                              label: "Open",
+                              onPressed: () {
+                                OpenFilex.open(path);
+                              },
+                            ),
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(e.toString())));
+                    }
+                  },
+                ),
+
+                IconButton(
+                  icon: const Icon(Icons.delete_outline, color: Colors.red),
+                  onPressed: () async {
+                    final confirm = await showDialog<bool>(
+                      context: context,
+                      builder: (_) {
+                        return AlertDialog(
+                          title: const Text("Delete File"),
+                          content: const Text(
+                            "Are you sure you want to delete this file?",
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context, false);
+                              },
+                              child: const Text("Cancel"),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(context, true);
+                              },
+                              child: const Text("Delete"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+
+                    if (confirm == true) {
+                      await ref
+                          .read(fileViewModelProvider.notifier)
+                          .delete(file);
+                    }
+                  },
+                ),
+              ],
             ),
           ],
         ),
